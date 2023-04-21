@@ -10,8 +10,9 @@ PC_LIBS := $(shell $(PKG_CONFIG) --libs $(PC_DEPS))
 
 CPPFLAGS += -D_GNU_SOURCE=1
 CFLAGS += -std=c99 -Wall -Wsign-compare -Wpointer-arith -Wcast-qual \
-	  -Wcast-align -D_GNU_SOURCE=1 -D_FILE_OFFSET_BITS=64
+	  -Wcast-align -D_GNU_SOURCE=1 -D_FILE_OFFSET_BITS=64 -DDRV_I915=1
 
+#define DRV_I915
 ifdef DRV_AMDGPU
 	CFLAGS += $(shell $(PKG_CONFIG) --cflags libdrm_amdgpu)
 	LDLIBS += -ldrm_amdgpu -ldl
@@ -38,7 +39,9 @@ endif
 CPPFLAGS += $(PC_CFLAGS)
 LDLIBS += $(PC_LIBS)
 
-LIBDIR ?= /usr/lib/
+PREFIX ?= /usr
+LIBDIR = $(PREFIX)/lib/
+INCLUDEDIR = $(PREFIX)/include
 
 GBM_VERSION_MAJOR := 1
 MINIGBM_VERSION := $(GBM_VERSION_MAJOR).0.0
@@ -58,5 +61,5 @@ install: all
 	ln -sf $(MINIGBM_FILENAME) $(DESTDIR)/$(LIBDIR)/libgbm.so
 	ln -sf $(MINIGBM_FILENAME) $(DESTDIR)/$(LIBDIR)/libgbm.so.$(GBM_VERSION_MAJOR)
 	install -D -m 0644 $(SRC)/gbm.pc $(DESTDIR)$(LIBDIR)/pkgconfig/gbm.pc
-	install -D -m 0644 $(SRC)/gbm.h $(DESTDIR)/usr/include/gbm.h
-	install -D -m 0644 $(SRC)/minigbm_helpers.h $(DESTDIR)/usr/include/minigbm/minigbm_helpers.h
+	install -D -m 0644 $(SRC)/gbm.h $(DESTDIR)/$(INCLUDEDIR)/gbm.h
+	install -D -m 0644 $(SRC)/minigbm_helpers.h $(DESTDIR)/$(INCLUDEDIR)/minigbm/minigbm_helpers.h
