@@ -10,7 +10,11 @@ PC_LIBS := $(shell $(PKG_CONFIG) --libs $(PC_DEPS))
 
 CPPFLAGS += -D_GNU_SOURCE=1
 CFLAGS += -std=c99 -Wall -Wsign-compare -Wpointer-arith -Wcast-qual \
-	  -Wcast-align -D_GNU_SOURCE=1 -D_FILE_OFFSET_BITS=64
+	  -Wcast-align -D_GNU_SOURCE=1 -D_FILE_OFFSET_BITS=64 -DDRV_I915=1 \
+	  -DLINEAR_ALIGN_256
+
+#define DRV_I915 1
+#define LINEAR_ALIGN_256
 
 ifdef DRV_AMDGPU
 	CFLAGS += $(shell $(PKG_CONFIG) --cflags libdrm_amdgpu)
